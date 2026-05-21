@@ -1,8 +1,14 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
 import Image from "next/image";
+import { Suspense } from "react";
 import { CartWidget } from "./cart-widget";
 import { SearchForm } from "./search-form";
+
+function SearchFormFallback() {
+  return (
+    <div className="flex h-[46px] w-[320px] items-center gap-3 rounded-full bg-zinc-900 px-5 py-3 ring-zinc-700" />
+  );
+}
 
 export function Header() {
   return (
@@ -12,7 +18,9 @@ export function Header() {
           devstore
         </Link>
 
-        <SearchForm />
+        <Suspense fallback={<SearchFormFallback />}>
+          <SearchForm />
+        </Suspense>
       </div>
 
       <div className="flex items-center gap-4">

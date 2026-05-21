@@ -1,25 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { Product } from "@/app/data/types/product";
-import { api } from "@/app/data/api";
+import { searchProducts as searchProductsFromCatalog } from "@/app/data/products";
 
 interface SearchProps {
   searchParams: {
     q: string;
   };
-}
-
-async function searchProducts(query: string): Promise<Product[]> {
-  const response = await api(`/products/search?q=${query}`, {
-    next: {
-      revalidate: 60 * 60, // 1 hora
-    },
-  });
-
-  const products = await response.json();
-
-  return products;
 }
 
 export default async function Search({ searchParams }: SearchProps) {
@@ -29,7 +16,7 @@ export default async function Search({ searchParams }: SearchProps) {
     redirect("/");
   }
 
-  const products = await searchProducts(query);
+  const products = searchProductsFromCatalog(query);
 
   return (
     <div className="flex flex-col gap-4">

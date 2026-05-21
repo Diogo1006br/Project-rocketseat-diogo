@@ -1,22 +1,9 @@
-import { api } from "@/app/data/api";
+import { getFeaturedProducts } from "@/app/data/products";
 import Link from "next/link";
 import Image from "next/image";
-import { Product } from "@/app/data/types/product";
-
-async function getFeaturedProducts(): Promise<Product[]> {
-  const response = await api("/products/featured", {
-    next: {
-      revalidate: 60 * 60, // 1 hora
-    },
-  });
-
-  const products = await response.json();
-
-  return products;
-}
 
 export default async function Home() {
-  const [highLightecProduct, ...otherProducts] = await getFeaturedProducts();
+  const [highLightecProduct, ...otherProducts] = getFeaturedProducts();
 
   return (
     <div className="grid max-h-[860px] grid-cols-9 grid-rows-6 gap-6">

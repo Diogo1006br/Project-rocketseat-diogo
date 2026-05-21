@@ -1,6 +1,8 @@
 import { AddToCartButton } from "@/app/components/add-to-cart-button";
-import { api } from "@/app/data/api";
-import { Product } from "@/app/data/types/product";
+import {
+  getFeaturedProducts,
+  getProductBySlug,
+} from "@/app/data/products";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -10,38 +12,24 @@ interface ProductProps {
   }>;
 }
 
-async function getProduct(slug: string): Promise<Product> {
-  const response = await api(`/products/${slug}`, {
-    next: {
-      revalidate: 60 * 60, // 1 hora
-    },
-  });
-
-  const product = await response.json();
-  return product;
-}
-
 export async function generateMetadata({
   params,
 }: ProductProps): Promise<Metadata> {
-  const product = await getProduct((await params).slug);
+  const product = getProductBySlug((await params).slug);
   return {
     title: product.title,
   };
 }
 
 export async function generateStaticParams() {
-  const response = await api("/products/featured");
-  const products: Product[] = await response.json();
-
-  return products.map((product) => {
-    return { slug: product.slug };
-  });
+  return getFeaturedProducts().map((product) => ({
+    slug: product.slug,
+  }));
 }
 
 export default async function ProductPage({ params }: ProductProps) {
   const { slug } = await params;
-  const product = await getProduct(slug);
+  const product = getProductBySlug(slug);
 
   return (
     <div className="relative grid max-h-[860px] grid-cols-3">

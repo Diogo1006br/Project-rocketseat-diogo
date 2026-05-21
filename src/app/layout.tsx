@@ -8,10 +8,15 @@ const inter = Inter({
 });
 
 
+const appUrl =
+  process.env.APP_URL ??
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+
 export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
   title: {
-    template: '%s - devstore',
-    default: 'devstore',
+    template: "%s - devstore",
+    default: "devstore",
   },
 };
 

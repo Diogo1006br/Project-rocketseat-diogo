@@ -1,9 +1,7 @@
-import { api } from "@/app/data/api";
-import { Product } from "@/app/data/types/product";
+import { getProductBySlug } from "@/app/data/products";
 import { env } from "@/app/env";
 import colors from "tailwindcss/colors";
 import { ImageResponse } from "next/og";
-import Image from "next/image";
 
 export const alt = "About Acme";
 
@@ -15,19 +13,8 @@ export const size = {
 
 export const contentType = "image/png";
 
-async function getProduct(slug: string): Promise<Product> {
-  const response = await api(`/products/${slug}`, {
-    next: {
-      revalidate: 60 * 60, // 1 hora
-    },
-  });
-
-  const product = await response.json();
-  return product;
-}
-
 export default async function OgImage({ params }: { params: { slug: string } }) {
-  const product = await getProduct(params.slug);
+  const product = getProductBySlug(params.slug);
 
   const productImageURL = new URL(product.image, env.APP_URL).toString();
 
