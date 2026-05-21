@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { env } from "@/app/env";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,13 +8,8 @@ const inter = Inter({
   variable: '--font-inter'
 });
 
-
-const appUrl =
-  process.env.APP_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-
 export const metadata: Metadata = {
-  metadataBase: new URL(appUrl),
+  metadataBase: new URL(env.APP_URL),
   title: {
     template: "%s - devstore",
     default: "devstore",
